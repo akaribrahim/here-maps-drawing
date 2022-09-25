@@ -2,6 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import HereMapContainer from '../components/HereMapContainer';
+import { hereApiKey } from './credentials';
 
 export default {
   title: 'HereMaps/HereMapContainer',
@@ -12,18 +13,18 @@ const Template: ComponentStory<typeof HereMapContainer> = (args) => <HereMapCont
 
 export const DefaultMap = Template.bind({});
 DefaultMap.args = {
-  apiKey: ''
+  apiKey: hereApiKey
 };
 
 export const EventsUiDisabled = Template.bind({});
 EventsUiDisabled.args = {
-  apiKey: '',
+  apiKey: hereApiKey,
   useEvents: false,
   useUi: false
 };
 
 export const ContainerStyle = Template.bind({});
 ContainerStyle.args = {
-  apiKey: '',
+  apiKey: hereApiKey,
   containerStyles: { height: 200 }
 };
