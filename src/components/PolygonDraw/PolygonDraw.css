@@ -1,0 +1,21 @@
+
+.map-container {
+    position: relative;
+}
+.map-container .tooltip-container {
+    display:none;
+}
+.map-container:hover .tooltip-container {
+    display:block;
+    position:fixed;
+    overflow:hidden;
+    background-color: #33333399;
+    color: #fff;
+    padding: 5px 15px;
+    font-size: 12px;
+    border-radius: 7px;
+    font-weight: 500;
+}
+
+
+
