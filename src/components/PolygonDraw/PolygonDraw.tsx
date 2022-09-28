@@ -176,7 +176,7 @@ const PolygonDraw = ({
         marker.setIcon(new H.map.Icon(drawingStyles.firstIcon || drawingStyles.icon));
         marker.addEventListener('tap', () => handleComplete(false));
       }
-      onPutCornerPoint && onPutCornerPoint({ currentPointCount: polystrip.getPointCount() });
+      onPutCornerPoint && onPutCornerPoint({ currentPointCount: currentPointCount() });
     }
   };
   const moveSmooth = (
@@ -336,9 +336,18 @@ const PolygonDraw = ({
           {getTooltipText()}
         </span>
       )}
-      Poligon Sayısı {polygonObjects.length}
     </div>
   );
 };
 PolygonDraw.defaultProps = defaultProps;
 export default PolygonDraw;
+
+export const getCoordinates = (polygon: any) => {
+  return polygon
+    .getGeometry()
+    .toGeoJSON()
+    .coordinates[0].reduce((acc: any, curr: any) => {
+      acc.push([curr[1], curr[0]]);
+      return acc;
+    }, []);
+};
