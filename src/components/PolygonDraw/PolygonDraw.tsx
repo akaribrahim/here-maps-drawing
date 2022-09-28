@@ -4,6 +4,8 @@ import hexToRgbA from '../helpers/hexToRGB';
 import { HGroup, HLineString, HPoint } from '../types';
 import './PolygonDraw.css';
 import useCustomRef from '../helpers/useCustomRef';
+import PolygonSvg from '../icons/mono-14-polygon.svg';
+
 type DrawingStyles = {
   firstIcon: string;
   icon: string;
@@ -12,22 +14,27 @@ type DrawingStyles = {
   movingPolylineStyles: object;
   finalPolygonStyles: object;
 };
+type Shortcut = {
+  keyCode: number;
+  char: string;
+};
+type ShortcutStruct = {
+  undo: Shortcut;
+  merge: Shortcut;
+  cancel: Shortcut;
+};
 interface PolygonDrawProps {
   map: any;
-  isDrawingActive: boolean;
-  drawingStyles?: DrawingStyles;
+  drawingStyles: DrawingStyles;
   color?: string;
   isResizable?: boolean;
-  polygonObjects?: Array<HGroup>;
   onSuccess?: Function;
+  onPutCornerPoint?: Function;
+  useShortcuts?: Boolean;
+  shortcuts?: ShortcutStruct;
+  onShortcutCallback?: Function;
 }
 const defaultProps = {
-  isDrawingActive: false,
-  useShortcuts: true,
-  onSuccess: () => {},
-  onEdit: () => {},
-  onPutCornerPoint: () => {},
-  onShortcutCallback: () => {},
   drawingStyles: {
     firstIcon: rectangleSvg('#185CF7').trim(),
     icon: rectangleSvg().trim(),
@@ -54,8 +61,8 @@ const defaultProps = {
       fillColor: 'rgba(24, 92, 247, 0.2)'
     }
   },
+  useShortcuts: true,
   shortcuts: {
-    header: 'Polygon Shortcuts',
     undo: {
       keyCode: 85,
       char: 'U'
@@ -64,27 +71,30 @@ const defaultProps = {
       keyCode: 77,
       char: 'M'
     },
-    delete: {
+    cancel: {
       keyCode: 27,
       char: 'ESC'
     }
-  },
-  isResizable: false
+  }
 };
 const { H } = window;
 const PolygonDraw = ({
   map,
-  isDrawingActive,
   drawingStyles,
   color,
   isResizable,
-  polygonObjects,
-  onSuccess
+  onSuccess,
+  onPutCornerPoint,
+  useShortcuts,
+  shortcuts,
+  onShortcutCallback
 }: PolygonDrawProps) => {
   if (!(map && H && Object.keys(H).length > 0)) {
     console.log('Map Object or H Object not found      (here-maps-drawing)');
     return <></>;
   }
+  const [polygonObjects, setPolygonObjects] = useState<Array<HGroup>>([]);
+  const [isActionsOpen, setIsActionsOpen] = useState<Boolean>(false);
   const verticeGroup = useRef<HGroup>(new H.map.Group()); // Vertices of polygon object, contains markers
   const drawnPolystrip = useRef<HLineString>(new H.geo.LineString()); // Every time a vertice added this will be updated and final polygon will be drawn with it.
   const movingPolystrip = useRef<HLineString>(new H.geo.LineString()); // First point will be last clicked point, second point will be updated on mouse move
@@ -94,17 +104,19 @@ const PolygonDraw = ({
   const { ref: tooltipRef } = useCustomRef<HTMLSpanElement>();
   const [pointCount, setPointCount] = useState<number>(0);
   useEffect(() => {
-    if (map && isDrawingActive) {
+    if (map && isActionsOpen) {
       map.addEventListener('pointerdown', handleClickOnMap);
       map.addEventListener('pointermove', handleMoveOnMap);
+      document.addEventListener('keydown', handleKeydown);
       window.addEventListener('mousemove', handleTooltipPosition);
       return () => {
         map.removeEventListener('pointermove', handleMoveOnMap);
+        document.removeEventListener('keydown', handleKeydown);
         map.removeEventListener('pointerdown', handleClickOnMap);
         window.removeEventListener('mousemove', handleTooltipPosition);
       };
     }
-  }, [map, isDrawingActive]);
+  }, [map, isActionsOpen]);
 
   const currentPointCount = (): number => {
     return drawnPolystrip.current.getPointCount();
@@ -113,7 +125,7 @@ const PolygonDraw = ({
     // On drawing phase, whenever user clicks on map, a marker created...
     // ...and these markers will be vertices of final polygon.
     // Also they will be used to handle edit functionality.
-    if (isDrawingActive) {
+    if (isActionsOpen) {
       setPointCount((state) => state + 1);
       // get clicked point coords, create a marker, add to verticeGroup.
       const screenPoint = map.screenToGeo(event.currentPointer.viewportX, event.currentPointer.viewportY);
@@ -162,8 +174,9 @@ const PolygonDraw = ({
         // On first point, set first point icon
         map.addObject(verticeGroup.current);
         marker.setIcon(new H.map.Icon(drawingStyles.firstIcon || drawingStyles.icon));
-        marker.addEventListener('tap', () => handleComplete(false, verticeGroup.current));
+        marker.addEventListener('tap', () => handleComplete(false));
       }
+      onPutCornerPoint && onPutCornerPoint({ currentPointCount: polystrip.getPointCount() });
     }
   };
   const moveSmooth = (
@@ -189,7 +202,7 @@ const PolygonDraw = ({
     }
   };
   const handleMoveOnMap = (event: any) => {
-    if (!(isDrawingActive && movingPolystrip.current.getPointCount() > 0)) return;
+    if (!(isActionsOpen && movingPolystrip.current.getPointCount() > 0)) return;
     // get pointer position as H.Point
     const newPoint: HPoint = map.screenToGeo(event.currentPointer.viewportX, event.currentPointer.viewportY);
     if (movingPolyline.current) {
@@ -208,29 +221,19 @@ const PolygonDraw = ({
       map.addObject(movingPolyline.current);
     }
   };
-  const handleComplete = (fromShortcut: Boolean = false, group: HGroup) => {
+  const handleComplete = (fromShortcut: Boolean = false) => {
     if (currentPointCount() >= 3) {
       const mainGroup: HGroup = isResizable
         ? console.log('asfas')
-        : addStandartPolygon(drawnPolystrip.current, group, fromShortcut);
+        : addStandartPolygon(drawnPolystrip.current, fromShortcut);
 
-      setPointCount(0);
-      map.removeObject(polygonOnDraw.current);
-      map.removeObject(polylineOnDraw.current);
-      map.removeObject(movingPolyline.current);
-      map.removeObject(group);
-      group.removeObjects(group.getObjects());
+      handleEscape();
 
-      polygonOnDraw.current = null;
-      polylineOnDraw.current = null;
-      drawnPolystrip.current = new H.geo.LineString();
-      movingPolystrip.current = new H.geo.LineString();
-      movingPolyline.current = null;
-
-      onSuccess(mainGroup);
+      setPolygonObjects((state) => [...state, mainGroup]);
+      onSuccess && onSuccess(mainGroup);
     }
   };
-  const addStandartPolygon = (polystrip: HLineString, verticeGroup: HGroup, fromShortcut: Boolean = false) => {
+  const addStandartPolygon = (polystrip: HLineString, fromShortcut: Boolean = false) => {
     if (!fromShortcut) {
       polystrip.removePoint(0);
     }
@@ -261,18 +264,79 @@ const PolygonDraw = ({
     if (pointCount < 3) return 'Click to continue drawing shape';
     return 'Click first point to close this shape';
   };
+  const handleKeydown = (e: any) => {
+    // U: 85 C: 67 M: 77 ESC: 27
+    if (useShortcuts && shortcuts) {
+      if (e.keyCode === shortcuts.undo.keyCode) {
+        // removeLastPoint
+        onShortcutCallback && onShortcutCallback({ keyCode: shortcuts.undo.keyCode, char: shortcuts.undo.char });
+        handleUndo();
+      } else if (e.keyCode === shortcuts.merge.keyCode) {
+        onShortcutCallback && onShortcutCallback({ keyCode: shortcuts.merge.keyCode, char: shortcuts.merge.char });
+        handleComplete(true);
+      } else if (e.keyCode === shortcuts.cancel.keyCode) {
+        onShortcutCallback && onShortcutCallback({ keyCode: shortcuts.cancel.keyCode, char: shortcuts.cancel.char });
+        handleEscape();
+      }
+    }
+  };
+  const handleEscape = () => {
+    setIsActionsOpen(false);
+    setPointCount(0);
+    map.removeObject(polygonOnDraw.current);
+    map.removeObject(polylineOnDraw.current);
+    map.removeObject(movingPolyline.current);
+    map.removeObject(verticeGroup.current);
+    verticeGroup.current.removeObjects(verticeGroup.current.getObjects());
+
+    polygonOnDraw.current = null;
+    polylineOnDraw.current = null;
+    drawnPolystrip.current = new H.geo.LineString();
+    movingPolystrip.current = new H.geo.LineString();
+    movingPolyline.current = null;
+  };
+  const handleUndo = () => {
+    if (currentPointCount() > 2) {
+      setPointCount((state) => state - 1);
+      drawnPolystrip.current.removePoint(drawnPolystrip.current.getPointCount() - 1);
+      const a = drawnPolystrip.current.extractPoint(drawnPolystrip.current.getPointCount() - 1);
+      var geoPolygon = new H.geo.Polygon(drawnPolystrip.current);
+      polygonOnDraw.current.setGeometry(geoPolygon);
+      polylineOnDraw.current.setGeometry(drawnPolystrip.current);
+      movingPolystrip.current.insertPoint(0, a);
+      movingPolystrip.current.removePoint(1);
+      movingPolyline.current.setGeometry(movingPolystrip.current);
+      verticeGroup.current.removeObject(
+        verticeGroup.current.getObjects()[verticeGroup.current.getObjects().length - 1]
+      );
+    }
+  };
   return (
     <div>
       <div className="action-box">
-        <div className="action">A</div>
-        <div className="sub-action">
-          <div>B</div>
-          <div>C</div>
+        <div className="action" onClick={() => setIsActionsOpen(true)}>
+          <img src={PolygonSvg} height={20} width={20} />
+        </div>
+        <div className={`sub-action ${isActionsOpen ? 'open' : ''}`}>
+          <div onClick={() => handleComplete(true)} className={pointCount >= 3 ? '' : 'disabled'}>
+            Close Shape {useShortcuts && <span className="shortcut">({shortcuts?.merge.char})</span>}
+          </div>
+          <div className="divider" />
+          <div onClick={handleUndo} className={pointCount > 2 ? '' : 'disabled'}>
+            Delete Last Point {useShortcuts && <span className="shortcut">({shortcuts?.undo.char})</span>}
+          </div>
+          <div className="divider" />
+          <div onClick={handleEscape}>
+            Cancel {useShortcuts && <span className="shortcut">({shortcuts?.cancel.char})</span>}
+          </div>
         </div>
       </div>
-      <span id="tooltip-span" className="tooltip-container" ref={tooltipRef}>
-        {getTooltipText()}
-      </span>
+      {isActionsOpen && (
+        <span id="tooltip-span" className="tooltip-container" ref={tooltipRef}>
+          {getTooltipText()}
+        </span>
+      )}
+      Poligon Sayısı {polygonObjects.length}
     </div>
   );
 };

@@ -1,0 +1,64 @@
+.map {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.map.border-radius > canvas {
+    border-radius: 10px
+}
+
+.H_zoom {
+    border-radius: 3px !important;
+    box-shadow: none !important;
+    margin-top: 0 !important;
+}
+.H_zoom .H_btn {
+    width: 32px;
+    height: 32px;
+}
+.H_zoom .H_btn:after {
+    width: 0 !important;
+    height: 0;
+    background-color: #fff;
+}
+.H_zoom .H_btn svg {
+    fill: #475569;
+    width: 16px;
+    height: 16px;
+}
+.H_ui {
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+.H_ctl {
+    margin: 5px;
+}
+.H_ctl .H_active {
+    background-color: #fff;
+}
+.H_ctl .H_btn {
+    width: 3em;
+    height: 3em;
+    box-shadow: none;
+    border-radius: 3px !important;
+}
+.H_ctl .H_btn svg {
+    fill: #475569;
+    width: 16px;
+    height: 16px;
+}
+.H_ctl .H_overlay {
+    box-shadow: none;
+    padding: 0 10px;
+}
+.H_ctl .H_overlay .H_rdo_title {
+    background-color: #fff;
+    color: #000;
+    border-bottom: 1px solid gray;
+}
+.H_ctl .H_overlay .H_btn {
+    width: 180px;
+    padding: 10px;
+    height: 20px;
+}

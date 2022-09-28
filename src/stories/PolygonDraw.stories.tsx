@@ -9,7 +9,7 @@ export default {
 };
 
 export const Polygon = () => (
-  <HereMapContainer apiKey={hereApiKey}>
-    {(mapObjects: MapObjects): JSX.Element => <PolygonDraw map={mapObjects.map} isDrawingActive />}
+  <HereMapContainer apiKey={hereApiKey} containerStyles={{ height: 300 }}>
+    {(mapObjects: MapObjects): JSX.Element => <PolygonDraw map={mapObjects.map} color="#000" />}
   </HereMapContainer>
 );

@@ -41,20 +41,18 @@ npm install --save here-maps-drawing
 
 > With the onSuccess method, we can take the `map, platform, ui, behavior` objects and perform all the operations written in the HereMaps document.
 
-|                    |                                     Description                                     |                  Default Value                  | isRequired |
-| -----------------: | :---------------------------------------------------------------------------------: | :---------------------------------------------: | :--------: |
-|                map |                                   Core Map Object                                   |                      null                       |   `Yes`    |
-|     polygonObjects |           Polygon Objects on map. Saved with onSuccess or onEdit methods.           |                      null                       |   `Yes`    |
-|    isDrawingActive |           State value that controls whether drawing mode is active or not           |                      false                      |   `Yes`    |
-|       useShortcuts |                        Use keyboard shortcut to help drawing                        |                      true                       |     No     |
-|      drawingStyles |          Styles for each step, see DrawingStyles section for more details           |     **See [DrawingStyles](#DrawingStyles)**     |     No     |
-|          shortcuts |                                    shortcut keys                                    |              **See ShortcutKeys**               |     No     |
-|        isResizable |                           Final polygon resizable or not                            |                      true                       |     No     |
-|              color | Instead of messing with the whole style from scratch, just changing the color (HEX) |                      null                       |     No     |
-|          onSuccess |                    Callback function, on polygon drawing finish                     |        `(finalPolygon, mainGroup) => {}`        |     No     |
-|             onEdit |                        Callback function, on polygon edited                         | `(finalPolygon, polygonIndex, mainGroup) => {}` |     No     |
-|   onPutCornerPoint |                       Callback function, on each corner point                       |         `({ currentPointCount }) => {}`         |     No     |
-| onShortcutCallback |               Callback that returns information when using a shortcut               |            `({keyCode, char}) => {}`            |     No     |
+|                          |                                     Description                                     |                  Default Value                  | isRequired |
+| -----------------------: | :---------------------------------------------------------------------------------: | :---------------------------------------------: | :--------: |
+|                      map |                                   Core Map Object                                   |                      null                       |   `Yes`    |
+|            drawingStyles |          Styles for each step, see DrawingStyles section for more details           |     **See [DrawingStyles](#DrawingStyles)**     |     No     |
+|                    color | Instead of messing with the whole style from scratch, just changing the color (HEX) |                      null                       |     No     |
+|                onSuccess |                    Callback function, on polygon drawing finish                     |        `(finalPolygon, mainGroup) => {}`        |     No     |
+|         onPutCornerPoint |                       Callback function, on each corner point                       |         `({ currentPointCount }) => {}`         |     No     |
+|             useShortcuts |                        Use keyboard shortcut to help drawing                        |                      true                       |     No     |
+|                shortcuts |                                    shortcut keys                                    |              **See ShortcutKeys**               |     No     |
+|       onShortcutCallback |               Callback that returns information when using a shortcut               |            `({keyCode, char}) => {}`            |     No     |
+|      onEdit(Coming Soon) |                        Callback function, on polygon edited                         | `(finalPolygon, polygonIndex, mainGroup) => {}` |     No     |
+| isResizable(Coming Soon) |                           Final polygon resizable or not                            |                      true                       |     No     |
 
 ## DrawingStyles
 

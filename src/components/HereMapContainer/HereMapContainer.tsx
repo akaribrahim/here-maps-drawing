@@ -2,7 +2,8 @@ import React, { ReactElement, useLayoutEffect, useState } from 'react';
 import useCustomRef from '../helpers/useCustomRef';
 import { MapObjects } from '../types';
 import getHereScripts from './getHereScripts';
-
+import mapControlStructure from './mapControlStructure';
+import './HereMapContainer.css';
 declare global {
   interface Window {
     H: any;
@@ -51,6 +52,10 @@ const HereMapContainer = (props: MapContainerProps) => {
       let ui: any = 'You must set useUi props to true';
       if (props.useUi) {
         ui = H.ui.UI.createDefault(map, defaultLayers, props.mapLanguage);
+        ui.removeControl('mapsettings');
+        ui.removeControl('scalebar');
+        const ms = new H.ui.MapSettingsControl(mapControlStructure(defaultLayers));
+        ui.addControl('customUiControl', ms);
       }
       props.onSuccess && props.onSuccess({ map, behavior, ui, platform });
       setMapObjects({ map, behavior, ui, platform });
