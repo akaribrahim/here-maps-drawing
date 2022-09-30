@@ -1,6 +1,6 @@
 {
   "name": "@akaribrahim/here-maps-drawing",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Description",
   "scripts": {
     "rollup": "rollup -c",
@@ -60,8 +60,9 @@
   "files": [
     "dist"
   ],
-  "types": "dist/index.d.ts",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/akaribrahim"
-  }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akaribrahim/here-maps-drawing.git"
+  },
+  "types": "dist/index.d.ts"
 }
