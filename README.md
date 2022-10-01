@@ -88,7 +88,7 @@ drawingStyles: {
 }
 ```
 
-## DrawingStyles
+## ShortcutKeys
 
 You can create shortcuts for three different events. Events only work during the polygon drawing phase
 
