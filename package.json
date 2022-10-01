@@ -1,6 +1,6 @@
 {
   "name": "@akaribrahim/here-maps-drawing",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Here Maps JS API drawing tool",
   "scripts": {
     "rollup": "rollup -c",
