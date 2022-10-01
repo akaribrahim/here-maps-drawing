@@ -14,6 +14,8 @@ npm install --save here-maps-drawing
 
 ## Docs
 
+_KNOWN ISSUE: Components are having trouble working with StrictMode that comes with React 18 or later. It will run in the production environment, but you must disable StrictMode in the development environment._
+
 **HereMapContainer**
 
 > The library provides a map container, but it will not be required to use the drawing tools.
