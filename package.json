@@ -1,6 +1,6 @@
 {
   "name": "@akaribrahim/here-maps-drawing",
-  "version": "0.0.6",
+  "version": "0.0.14",
   "description": "Here Maps JS API drawing tool",
   "scripts": {
     "rollup": "rollup -c",
@@ -50,8 +50,6 @@
     "typescript": "^4.8.3"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "loadjs": "^4.2.0",
     "robust-point-in-polygon": "^1.0.3"
   },

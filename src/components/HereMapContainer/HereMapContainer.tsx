@@ -1,4 +1,4 @@
-import React, { ReactElement, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import useCustomRef from '../helpers/useCustomRef';
 import { MapObjects } from '../types';
 import getHereScripts from './getHereScripts';
@@ -21,6 +21,7 @@ type MapContainerProps = {
   mapLanguage?: string;
   onSuccess?: Function;
   children?: Function;
+  resizeOnWidthChange: Boolean;
 };
 
 const HereMapContainer = (props: MapContainerProps) => {
@@ -32,7 +33,6 @@ const HereMapContainer = (props: MapContainerProps) => {
     platform: null
   });
   useLayoutEffect(() => {
-    console.log('BURDA', mapObjects);
     getHereScripts(() => {
       if (!props.apiKey) return console.error('Please provide an apiKey as props.    (here-maps-drawing)');
       const { H } = window;
@@ -61,9 +61,35 @@ const HereMapContainer = (props: MapContainerProps) => {
       setMapObjects({ map, behavior, ui, platform });
     });
   }, []);
+
+  /* Resize with debounce */
+  const handleResize = () => {
+    console.log('BURDAAA');
+    if (mapObjects.map && props.resizeOnWidthChange) {
+      console.log('BURDAAA');
+      mapObjects.map.getViewPort().resize();
+    }
+  };
+  const debounce = (func: Function, timeout = 300) => {
+    let timer: any;
+    return (...args: any) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, timeout);
+    };
+  };
+  const resizeDebounce = debounce(handleResize, 200);
+  useEffect(() => {
+    window.addEventListener('resize', resizeDebounce);
+
+    return () => {
+      window.removeEventListener('resize', resizeDebounce);
+    };
+  }, []);
   return (
     <div id="map-container" className="map-container" ref={mapRef} style={{ ...props.containerStyles }}>
-      {props.children && props.children(mapObjects)}
+      {props.children && mapObjects.map && props.children(mapObjects)}
     </div>
   );
 };

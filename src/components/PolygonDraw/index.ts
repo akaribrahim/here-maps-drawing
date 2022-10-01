@@ -1,1 +1,1 @@
-export { default, getCoordinates } from './PolygonDraw';
+export { default, getCoordinates, defaultDrawingStyles } from './PolygonDraw';

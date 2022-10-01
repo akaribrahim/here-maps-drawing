@@ -1,3 +1,3 @@
-import PolygonDraw, { getCoordinates } from './PolygonDraw';
+import PolygonDraw, { getCoordinates, defaultDrawingStyles } from './PolygonDraw';
 import HereMapContainer from './HereMapContainer';
-export { PolygonDraw, HereMapContainer, getCoordinates };
+export { PolygonDraw, HereMapContainer, getCoordinates, defaultDrawingStyles };

@@ -16,6 +16,13 @@ DefaultMap.args = {
   apiKey: hereApiKey
 };
 
+export const CenterAndZoom = Template.bind({});
+CenterAndZoom.args = {
+  apiKey: hereApiKey,
+  center: { lat: 12, lng: 33 },
+  zoom: 15
+};
+
 export const EventsUiDisabled = Template.bind({});
 EventsUiDisabled.args = {
   apiKey: hereApiKey,
@@ -27,4 +34,16 @@ export const ContainerStyle = Template.bind({});
 ContainerStyle.args = {
   apiKey: hereApiKey,
   containerStyles: { height: 200 }
+};
+
+export const MapLanguage = Template.bind({});
+MapLanguage.args = {
+  apiKey: hereApiKey,
+  mapLanguage: 'tr-TR'
+};
+
+export const Resize = Template.bind({});
+Resize.args = {
+  apiKey: hereApiKey,
+  resizeOnWidthChange: false
 };

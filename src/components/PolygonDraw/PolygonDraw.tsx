@@ -34,6 +34,32 @@ interface PolygonDrawProps {
   shortcuts?: ShortcutStruct;
   onShortcutCallback?: Function;
 }
+export const defaultDrawingStyles = {
+  firstIcon: rectangleSvg('#185CF7').trim(),
+  icon: rectangleSvg().trim(),
+  polylineStylesOnDraw: {
+    lineWidth: 3,
+    strokeColor: '#185CF7',
+    lineJoin: 'round'
+  },
+  polygonStylesOnDraw: {
+    lineWidth: 0,
+    fillColor: 'rgba(24, 92, 247, 0.2)'
+  },
+  movingPolylineStyles: {
+    lineWidth: 3,
+    strokeColor: '#185CF7',
+    lineJoin: 'round',
+    lineDash: [4],
+    lineDashOffset: 1
+  },
+  finalPolygonStyles: {
+    lineWidth: 3,
+    strokeColor: '#185CF7',
+    lineJoin: 'round',
+    fillColor: 'rgba(24, 92, 247, 0.2)'
+  }
+};
 const defaultProps = {
   drawingStyles: {
     firstIcon: rectangleSvg('#185CF7').trim(),
@@ -77,7 +103,6 @@ const defaultProps = {
     }
   }
 };
-const { H } = window;
 const PolygonDraw = ({
   map,
   drawingStyles,
@@ -89,8 +114,9 @@ const PolygonDraw = ({
   shortcuts,
   onShortcutCallback
 }: PolygonDrawProps) => {
+  const { H } = window;
   if (!(map && H && Object.keys(H).length > 0)) {
-    console.log('Map Object or H Object not found      (here-maps-drawing)');
+    console.log('Map Object or H Object not found      (here-maps-drawing)', map, H);
     return <></>;
   }
   const [polygonObjects, setPolygonObjects] = useState<Array<HGroup>>([]);
@@ -283,10 +309,11 @@ const PolygonDraw = ({
   const handleEscape = () => {
     setIsActionsOpen(false);
     setPointCount(0);
-    map.removeObject(polygonOnDraw.current);
-    map.removeObject(polylineOnDraw.current);
-    map.removeObject(movingPolyline.current);
-    map.removeObject(verticeGroup.current);
+    if (verticeGroup.current?.getObjects().length === 0) return; // nothing to delete
+    polygonOnDraw.current && map.removeObject(polygonOnDraw.current);
+    polylineOnDraw.current && map.removeObject(polylineOnDraw.current);
+    movingPolyline.current && map.removeObject(movingPolyline.current);
+    verticeGroup.current && map.removeObject(verticeGroup.current);
     verticeGroup.current.removeObjects(verticeGroup.current.getObjects());
 
     polygonOnDraw.current = null;

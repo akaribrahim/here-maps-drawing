@@ -20,20 +20,17 @@ npm install --save here-maps-drawing
 
 > With the onSuccess method, we can take the `map, platform, ui, behavior` objects and perform all the operations written in the HereMaps document.
 
-|                     |                             Description                             |                  Default Value                  | isRequired |
-| ------------------: | :-----------------------------------------------------------------: | :---------------------------------------------: | :--------: |
-|              apiKey |                          HereMaps Api Key                           |                      null                       |   `Yes`    |
-|              center |        Center coordinates to be given when the map is loaded        |        `{lat:41.03115 , lng: 29.00214}`         |     No     |
-|                zoom |                    Zoom level when map is loaded                    |                        9                        |     No     |
-|           useEvents |                             Use Events                              |                      true                       |     No     |
-|               useUi |                               Use Ui                                |                      true                       |     No     |
-|        layerOptions | `layerOptions` given to the `platform.createDefaultLayers` function |                       {}                        |     No     |
-|     containerStyles |                    Style object of map container                    |         `{height: 500, width: '100%'}`          |     No     |
-| resizeOnWidthChange |               Resize the map on `window.resize` event               |                      true                       |     No     |
-|         mapLanguage |                            Map Language                             |                     'en-US'                     |     No     |
-|           rulerTool |           Activate RulerTool, see examples and try it out           |                      true                       |     No     |
-|     onFoundDistance |              Callback that returns RulerTool's results              | `({ panoramicDistance, routerDistance }) => {}` |     No     |
-|           onSuccess |               Callback function returning map objects               |     `({map, platform, behavior, ui}) => {}`     |     No     |
+|                     |                      Description                      |              Default Value              | isRequired |
+| ------------------: | :---------------------------------------------------: | :-------------------------------------: | :--------: |
+|              apiKey |                   HereMaps Api Key                    |                  null                   |   `Yes`    |
+|              center | Center coordinates to be given when the map is loaded |    `{lat:41.03115 , lng: 29.00214}`     |     No     |
+|                zoom |             Zoom level when map is loaded             |                    9                    |     No     |
+|           useEvents |                      Use Events                       |                  true                   |     No     |
+|               useUi |                        Use Ui                         |                  true                   |     No     |
+|     containerStyles |             Style object of map container             |     `{height: 500, width: '100%'}`      |     No     |
+| resizeOnWidthChange |        Resize the map on `window.resize` event        |                  true                   |     No     |
+|         mapLanguage |                     Map Language                      |                 'en-US'                 |     No     |
+|           onSuccess |        Callback function returning map objects        | `({map, platform, behavior, ui}) => {}` |     No     |
 
 **PolygonDraw**
 
@@ -44,13 +41,13 @@ npm install --save here-maps-drawing
 |                          |                                     Description                                     |                  Default Value                  | isRequired |
 | -----------------------: | :---------------------------------------------------------------------------------: | :---------------------------------------------: | :--------: |
 |                      map |                                   Core Map Object                                   |                      null                       |   `Yes`    |
-|            drawingStyles |          Styles for each step, see DrawingStyles section for more details           |     **See [DrawingStyles](#DrawingStyles)**     |     No     |
 |                    color | Instead of messing with the whole style from scratch, just changing the color (HEX) |                      null                       |     No     |
+|            drawingStyles |          Styles for each step, see DrawingStyles section for more details           |     **See [DrawingStyles](#DrawingStyles)**     |     No     |
+|             useShortcuts |                        Use keyboard shortcut to help drawing                        |                      true                       |     No     |
+|                shortcuts |                                    shortcut keys                                    |      **See [ShortcutKeys](#ShortcutKeys)**      |     No     |
+|       onShortcutCallback |               Callback that returns information when using a shortcut               |            `({keyCode, char}) => {}`            |     No     |
 |                onSuccess |                    Callback function, on polygon drawing finish                     |        `(finalPolygon, mainGroup) => {}`        |     No     |
 |         onPutCornerPoint |                       Callback function, on each corner point                       |         `({ currentPointCount }) => {}`         |     No     |
-|             useShortcuts |                        Use keyboard shortcut to help drawing                        |                      true                       |     No     |
-|                shortcuts |                                    shortcut keys                                    |              **See ShortcutKeys**               |     No     |
-|       onShortcutCallback |               Callback that returns information when using a shortcut               |            `({keyCode, char}) => {}`            |     No     |
 |      onEdit(Coming Soon) |                        Callback function, on polygon edited                         | `(finalPolygon, polygonIndex, mainGroup) => {}` |     No     |
 | isResizable(Coming Soon) |                           Final polygon resizable or not                            |                      true                       |     No     |
 
@@ -89,9 +86,9 @@ drawingStyles: {
 }
 ```
 
-_ShortcutKeys_
+## DrawingStyles
 
-You can create shortcuts for three different events. Events only work during the polygon drawing phase, that is, when **isDrawingActive=true**.
+You can create shortcuts for three different events. Events only work during the polygon drawing phase
 
 It can be customized by changing the keyCode and char values in the format given below.
 
@@ -99,11 +96,10 @@ It can be customized by changing the keyCode and char values in the format given
 
 > Merge => Completes the polygon by connecting it with the first point
 
-> Delete => Deletes the polygon in the drawing phase.
+> Cancel => Deletes the polygon in the drawing phase.
 
 ```js
 {
-    header: 'Polygon Shortcuts',
     undo: {
        keyCode: 85,
        char: 'U',
@@ -112,7 +108,7 @@ It can be customized by changing the keyCode and char values in the format given
        keyCode: 77,
        char: 'M',
     },
-    delete: {
+    cancel: {
        keyCode: 27,
        char: 'ESC',
     },
