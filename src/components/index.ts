@@ -1,3 +1,4 @@
 import PolygonDraw, { getCoordinates, defaultDrawingStyles } from './PolygonDraw';
 import HereMapContainer from './HereMapContainer';
-export { PolygonDraw, HereMapContainer, getCoordinates, defaultDrawingStyles };
+import isPointInPolygon from './pointInPolygonHao';
+export { PolygonDraw, HereMapContainer, getCoordinates, defaultDrawingStyles, isPointInPolygon };

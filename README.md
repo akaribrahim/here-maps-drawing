@@ -1,24 +1,53 @@
-# Here-Maps-Drawing (NOT READY)
+<h1 align="center">Here Maps Drawing</h1>
 
-> Drawing components on Here Maps JS API
+<div align="center">
+
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+
+</div>
+
+---
+
+<p align="center"> Drawing components on Here Maps JS API
+    <br> 
+</p>
+
+## 📝 Table of Contents
+
+- [About](#about)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Docs](#docs)
+- [Built Using](#built_using)
+- [Authors](#authors)
+
+## 🧐 About <a name = "about"></a>
 
 We can do simple operations using Here Maps Js API but it doesn't provide any drawing tools. The purpose of this library is to be able to draw shapes like polygons on Here Maps.
 
-## Installation
+## 🏁 Installation <a name = "installation"></a>
 
 ```bash
-npm install --save here-maps-drawing
+npm install here-maps-drawing
 ```
 
-## Usage
+## 🎈 Usage <a name="usage"></a>
 
-## Docs
+```js
+<HereMapContainer apiKey={hereApiKey}>
+  {(mapObjects: MapObjects): JSX.Element => <PolygonDraw map={mapObjects.map} />}
+</HereMapContainer>
+```
+
+- You can find examples with explanation on [HereMapsDrawingExamles](https://akaribrahim.github.io/here-maps-drawing-examples/)
+- Source code of examples on [Github](https://github.com/akaribrahim/here-maps-drawing-examples)
+
+## 🎈 Docs <a name="docs"></a>
 
 _KNOWN ISSUE: Components are having trouble working with StrictMode that comes with React 18 or later. It will run in the production environment, but you must disable StrictMode in the development environment._
 
 **HereMapContainer**
-
-> The library provides a map container, but it will not be required to use the drawing tools.
 
 > With the onSuccess method, we can take the `map, platform, ui, behavior` objects and perform all the operations written in the HereMaps document.
 
@@ -35,8 +64,6 @@ _KNOWN ISSUE: Components are having trouble working with StrictMode that comes w
 |           onSuccess |        Callback function returning map objects        | `({map, platform, behavior, ui}) => {}` |     No     |
 
 **PolygonDraw**
-
-> You can pass the map object to this component with the HereMapContainer component of this library or in a different way.
 
 > With the onSuccess method, we can take the `map, platform, ui, behavior` objects and perform all the operations written in the HereMaps document.
 
@@ -117,6 +144,6 @@ It can be customized by changing the keyCode and char values in the format given
 }
 ```
 
-## License
+## ✍️ Authors <a name = "authors"></a>
 
-MIT © [akaribrahim](https://github.com/akaribrahim)
+- [@akaribrahim](https://github.com/akaribrahim)
