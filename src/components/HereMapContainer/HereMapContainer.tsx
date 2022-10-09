@@ -64,9 +64,7 @@ const HereMapContainer = (props: MapContainerProps) => {
 
   /* Resize with debounce */
   const handleResize = () => {
-    console.log('BURDAAA');
     if (mapObjects.map && props.resizeOnWidthChange) {
-      console.log('BURDAAA');
       mapObjects.map.getViewPort().resize();
     }
   };
