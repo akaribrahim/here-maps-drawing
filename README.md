@@ -19,7 +19,6 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Docs](#docs)
-- [Built Using](#built_using)
 - [Authors](#authors)
 
 ## 🧐 About <a name = "about"></a>
@@ -29,7 +28,7 @@ We can do simple operations using Here Maps Js API but it doesn't provide any dr
 ## 🏁 Installation <a name = "installation"></a>
 
 ```bash
-npm install here-maps-drawing
+npm install @akaribrahim/here-maps-drawing
 ```
 
 ## 🎈 Usage <a name="usage"></a>
