@@ -121,11 +121,11 @@ You can create shortcuts for three different events. Events only work during the
 
 It can be customized by changing the keyCode and char values in the format given below.
 
-> Undo => Deletes the last point
+> Undo => deletes the last point
 
-> Merge => Completes the polygon by connecting it with the first point
+> Merge => completes the polygon by connecting it with the first point
 
-> Cancel => Deletes the polygon in the drawing phase.
+> Cancel => deletes the polygon in the drawing phase.
 
 ```js
 {
